@@ -41,8 +41,14 @@ exports.handler = async function (event) {
     return json(400, { error: "Missing audioBase64 or creatorUserId" });
   }
 
-  const openCloudKey = process.env.OPEN_CLOUD_KEY;
-  if (!openCloudKey) {
+  console.log("OPEN_CLOUD_KEY exists:", !!process.env.OPEN_CLOUD_KEY);
+  console.log(
+    "OPEN_CLOUD_KEY prefix:",
+    process.env.OPEN_CLOUD_KEY
+      ? process.env.OPEN_CLOUD_KEY.slice(0, 6)
+      : "MISSING"
+  );
+  if (!process.env.OPEN_CLOUD_KEY) {
     return json(500, { error: "Server misconfigured: OPEN_CLOUD_KEY not set" });
   }
 
@@ -64,7 +70,7 @@ exports.handler = async function (event) {
 
     const uploadRes = await fetch("https://apis.roblox.com/assets/v1/assets", {
       method: "POST",
-      headers: { "x-api-key": openCloudKey },
+      headers: { "x-api-key": process.env.OPEN_CLOUD_KEY },
       body: form,
     });
 
@@ -91,7 +97,7 @@ exports.handler = async function (event) {
       await new Promise((r) => setTimeout(r, 800));
 
       const pollRes = await fetch(`https://apis.roblox.com/assets/v1/${operationPath}`, {
-        headers: { "x-api-key": openCloudKey },
+        headers: { "x-api-key": process.env.OPEN_CLOUD_KEY },
       });
       const pollJson = await pollRes.json();
 
