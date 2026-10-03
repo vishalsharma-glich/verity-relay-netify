@@ -52,7 +52,7 @@ exports.handler = async function (event) {
     return json(500, { error: "Server misconfigured: OPEN_CLOUD_KEY not set" });
   }
 
-  const gameId = process.env.GAME_ID;
+  const gameId = process.env.UNIVERISE_ID;
 
   try {
     const audioBuffer = Buffer.from(audioBase64, "base64");
